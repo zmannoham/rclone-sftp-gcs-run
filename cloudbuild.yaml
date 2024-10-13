@@ -1,0 +1,54 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  # Cloud Run Job Name
+  _JOB_NAME: "run-rclone"
+  # Just put "latest" unless you know what you're doing
+  _IMAGE_VERSION: "latest"
+  # Region for the repository and Cloud Run Job
+  _REGION: "us-central1"
+  # Name of repository in Artifact Registry (should already be created)
+  _REPONAME: "docker-repository"
+  # SFTP Host, Username, Password, Port, and Path (Path should start with /)
+  _SFTP_HOST: "test.rebex.net"
+  _SFTP_USERNAME: "demo"
+  _SFTP_PASSWORD: "password"
+  _SFTP_PORT: "22"
+  _SFTP_PATH: "/"
+  # GCS Bucket and Path (Path should start with /)
+  _GCS_BUCKET: "rclone-test-hello"
+  _GCS_PATH: "/"
+
+steps:
+- name: "gcr.io/cloud-builders/docker"
+  args:
+    - "build"
+    - "-t"
+    - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPONAME}/${_JOB_NAME}:${_IMAGE_VERSION}"
+    - "."
+
+- name: "gcr.io/cloud-builders/docker"
+  args:
+    - "push"
+    - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPONAME}/${_JOB_NAME}:${_IMAGE_VERSION}"
+
+- name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+  entrypoint: gcloud
+  args:
+    - "run"
+    - "jobs"
+    - "deploy"
+    - "${_JOB_NAME}"
+    - "--image"
+    - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPONAME}/${_JOB_NAME}:${_IMAGE_VERSION}"
+    - "--region"
+    - "${_REGION}"
+    - "--set-env-vars"
+    - "SFTP_USERNAME=${_SFTP_USERNAME},SFTP_PASSWORD=${_SFTP_PASSWORD},SFTP_HOST=${_SFTP_HOST},SFTP_PORT=${_SFTP_PORT},SFTP_PATH=${_SFTP_PATH},GCS_BUCKET=${_GCS_BUCKET},GCS_PATH=${_GCS_PATH}"
+    - "--max-retries"
+    - "0"
+
+images:
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPONAME}/${_JOB_NAME}:${_IMAGE_VERSION}"
+  
