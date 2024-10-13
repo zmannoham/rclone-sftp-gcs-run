@@ -1,6 +1,9 @@
 options:
   logging: CLOUD_LOGGING_ONLY
 
+# Set service account. Uncomment this and set it to the service account you want to use for Cloud Build.
+# serviceAccount: ""
+
 substitutions:
   # Cloud Run Job Name
   _JOB_NAME: "run-rclone"
