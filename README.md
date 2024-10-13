@@ -8,7 +8,7 @@ You can deploy using either Cloud Shell or locally (only if you have the gcloud 
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/rclone-sftp-gcs-run.git
+    git clone https://github.com/zmannoham/rclone-sftp-gcs-run.git
     cd rclone-sftp-gcs-run
     ```
 
