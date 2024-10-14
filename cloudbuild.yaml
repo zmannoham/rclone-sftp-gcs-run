@@ -14,7 +14,10 @@ substitutions:
   # Name of repository in Artifact Registry (should already be created)
   _REPONAME: "docker-repository"
   # Set the service account to use for the Cloud Run Job. Uncomment if you need to use.
-  #_SERVICE_ACCOUNT: ""
+  #_SERVICE_ACCOUNT: "my-service-account"
+  # Set the VPC network and subnet for direct VPC egress. Uncomment if you need to use.
+  #_VPC_NETWORK: "my-vpc-network"
+  #_VPC_SUBNET: "my-vpc-subnet"
   # Set the task timeout for the Cloud Run Job
   _TASK_TIMEOUT: "10m"
   # SFTP Host, Username, Password, Port, and Path (Path should start with /)
@@ -58,8 +61,15 @@ steps:
     - "--task-timeout"
     - "${_TASK_TIMEOUT}"
 # Uncomment the following lines if you set the service account in the substitutions
-#    - "--service-account"
-#    - "${_SERVICE_ACCOUNT}"
+    # - "--service-account"
+    # - "${_SERVICE_ACCOUNT}"
+# Uncomment the following lines and adjust values if you want to use direct VPC egress (for example, if you want to use a static external IP with a Cloud Router)
+    # - "--network"
+    # - "${_VPC_NETWORK}"
+    # - "--subnet"
+    # - "${_VPC_SUBNET}"
+    # - "--vpc-egress"
+    # - "all-traffic"
 
 images:
   - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPONAME}/${_JOB_NAME}:${_IMAGE_VERSION}"
