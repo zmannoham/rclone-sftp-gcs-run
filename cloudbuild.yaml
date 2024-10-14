@@ -7,12 +7,16 @@ options:
 substitutions:
   # Cloud Run Job Name
   _JOB_NAME: "run-rclone"
-  # Just put "latest" unless you know what you're doing
+  # Just put "latest" unless you want a versioned image to be buiilt and deployed
   _IMAGE_VERSION: "latest"
   # Region for the repository and Cloud Run Job
   _REGION: "us-central1"
   # Name of repository in Artifact Registry (should already be created)
   _REPONAME: "docker-repository"
+  # Set the service account to use for the Cloud Run Job. Uncomment if you need to use.
+  #_SERVICE_ACCOUNT: ""
+  # Set the task timeout for the Cloud Run Job
+  _TASK_TIMEOUT: "10m"
   # SFTP Host, Username, Password, Port, and Path (Path should start with /)
   _SFTP_HOST: "test.rebex.net"
   _SFTP_USERNAME: "demo"
@@ -51,6 +55,11 @@ steps:
     - "SFTP_USERNAME=${_SFTP_USERNAME},SFTP_PASSWORD=${_SFTP_PASSWORD},SFTP_HOST=${_SFTP_HOST},SFTP_PORT=${_SFTP_PORT},SFTP_PATH=${_SFTP_PATH},GCS_BUCKET=${_GCS_BUCKET},GCS_PATH=${_GCS_PATH}"
     - "--max-retries"
     - "0"
+    - "--task-timeout"
+    - "${_TASK_TIMEOUT}"
+# Uncomment the following lines if you set the service account in the substitutions
+#    - "--service-account"
+#    - "${_SERVICE_ACCOUNT}"
 
 images:
   - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPONAME}/${_JOB_NAME}:${_IMAGE_VERSION}"
