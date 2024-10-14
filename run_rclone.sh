@@ -10,3 +10,13 @@ rclone sync -vv ":sftp:${SFTP_PATH}" "gcscon:${GCS_BUCKET}${GCS_PATH}" \
     --sftp-pass=$(rclone obscure "${SFTP_PASSWORD}") \
     --sftp-port=${SFTP_PORT} \
     --gcs-bucket-policy-only \
+
+# Run rclone copy
+## Use this instead if you want to copy files from the SFTP server to GCS, without deleting any files in the destination to match the source SFTP server.
+## So you would comment out the above and uncomment the below.
+# rclone copy -vv ":sftp:${SFTP_PATH}" "gcscon:${GCS_BUCKET}${GCS_PATH}" \
+#     --sftp-host=${SFTP_HOST} \
+#     --sftp-user=${SFTP_USERNAME} \
+#     --sftp-pass=$(rclone obscure "${SFTP_PASSWORD}") \
+#     --sftp-port=${SFTP_PORT} \
+#     --gcs-bucket-policy-only \
