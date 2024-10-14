@@ -1,7 +1,7 @@
 options:
   logging: CLOUD_LOGGING_ONLY
 
-# Set service account. Uncomment this and set it to the service account you want to use for Cloud Build.
+# Set Cloud Build service account. Uncomment this and set it to the service account you want to use for Cloud Build.
 # serviceAccount: ""
 
 substitutions:
